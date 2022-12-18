@@ -1,6 +1,4 @@
 import React, {useState} from 'react'
-
-
 export default function TextForm(props) {
 
   const [text, setText] = useState("");
@@ -9,6 +7,11 @@ export default function TextForm(props) {
 setText(text.toUpperCase())
 props.showAlert('Text tranform to uppercase', "green")
     }
+    const lowerCase = (e) => {
+      setText(text.toLowerCase())
+      props.showAlert('Text tranform to lowercase', "green")
+          }
+
     const onChange = (e)=>{
 setText(e.target.value)
     }
@@ -24,13 +27,14 @@ setText(e.target.value)
     const copyText = () =>{
       var text = document.getElementById('message');
       text.select();
-  text.setSelectionRange(0, 99999);
   navigator.clipboard.writeText(text.value);
+  document.getSelection().removeAllRanges()
   props.showAlert('Text copied', "green")
   
-
+  
     }
-    const removeSpace = () => {
+    const removeSpace = (e) => {
+      
       setText(text.split(" ").map(a => a.trim()).filter(text => text !== "").join(" "))
       props.showAlert('Space removed', "green")
     }
@@ -41,10 +45,11 @@ setText(e.target.value)
     <div className='container mx-auto'>
 <h1 className='text-2xl mt-8 my-1 font-bold'>{props.heading}</h1>
 <textarea id="message" rows="10" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 mb-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={text} placeholder="Leave a comment..." onChange={onChange}></textarea>
-<button className='p-2 bg-blue-500 rounded text-white text-[14px] mt-2' onClick={upperCase}>Convert to Uppercase</button>
-<button className='p-2 bg-red-500 rounded text-white text-[14px] mt-2 ml-2' onClick={eraseAll}>Erase All</button>
-<button className='p-2 bg-yellow-500 ml-2 rounded text-white text-[14px] mt-2' onClick={copyText}>Copy to Clipboard</button>
-<button className='p-2 bg-yellow-500 ml-2 rounded text-white text-[14px] mt-2' onClick={removeSpace}>Remove Extra Space</button>
+<button disabled={text.length === 0} className='p-2 mr-2 bg-blue-500 rounded text-white text-[14px] mt-2' onClick={upperCase}>Convert to Uppercase</button>
+<button disabled={text.length === 0} className='p-2 bg-blue-500 rounded text-white text-[14px] mt-2' onClick={lowerCase}>Convert to Lowercase</button>
+<button disabled={text.length === 0} className='p-2 bg-red-500 rounded text-white text-[14px] mt-2 mx-2' onClick={eraseAll}>Erase All</button>
+<button disabled={text.length === 0} className='p-2 bg-yellow-500 rounded text-white text-[14px] mt-2' onClick={copyText}>Copy to Clipboard</button>
+<button disabled={text.length === 0} className='p-2 bg-yellow-500 ml-2 rounded text-white text-[14px] mt-2' onClick={removeSpace}>Remove Extra Space</button>
 </div>
 <div className='container mx-auto'>
 <h1 className='text-2xl mt-5 my-1 font-bold dark:text-white'>Your text summary</h1>
@@ -68,7 +73,7 @@ setText(e.target.value)
 </div>
 
 </div>
-<p id='info' className='dark:text-white mt-1.5' style={{fontSize : `${font}px`}}>{text}</p>
+<p id='info' className='dark:text-white mt-1.5' style={{fontSize : `${font}px`}}>{text.length===0 ? 'Nothing to preview' : text}</p>
 </div>
 </>
   )
